@@ -7,8 +7,10 @@ int main()
 {
 	SqStack S;
 	initStack(S);
-	testPush(S);
-	testPop(S);
+	testPush(S);//测试进栈
+	//testPop(S);//测试出栈
+	printStack(S);//测试输出栈
+	printf("栈有%d个元素。", getStackLength(S));
 	return 0;
 }
 
@@ -87,4 +89,16 @@ void testPop(SqStack & S)
 	printf("出栈元素是%d\n", i);
 	Pop(S, i);
 	printf("出栈元素是%d\n", i);
+}
+
+void printStack(SqStack S)
+{
+	while (S.top+1) {
+		printf("栈元素为%d\n", S.data[S.top--]);
+	}
+}
+
+int getStackLength(SqStack S)
+{
+	return S.top+1;
 }

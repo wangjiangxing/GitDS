@@ -14,3 +14,5 @@ void GetTop(SqStack S, ElemType &e);//读取栈顶元素并存入e
 void ClearStack(SqStack &L);//清空栈
 void testPush(SqStack &S);
 void testPop(SqStack &S);
+void printStack(SqStack S);//输出栈
+int getStackLength(SqStack S);//返回栈的长度
