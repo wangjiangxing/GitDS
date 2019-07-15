@@ -15,3 +15,4 @@ void preOrder(BiTree T);//先序遍历
 void inOrder(BiTree T);//中序遍历
 void postOrder(BiTree T);//后序遍历
 void LevelOrder(BiTree T);//层次遍历
+void sumNoLeaf(BiTree T);//统计非叶子结点的个数
