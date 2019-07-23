@@ -18,7 +18,8 @@ int main()
 	printf("****************************\n");
 	LevelOrder(T);
 	sumNoLeaf(T);
-	printf("该树的非叶子结点有%d个", sumNoLeafNum);
+	printf("该树的非叶子结点有%d个\n", sumNoLeafNum);   
+	printf("该树的高度为%d", sumHeight(T));
 	return 0;
 }
 
@@ -100,14 +101,29 @@ void LevelOrder(BiTree T)
 			enQueue(Q, p->Rchild);
 	}
 }
-void sumNoLeaf(BiTree T)
+void sumNoLeaf(BiTree T)//使用先序遍历的思想
 {
 	if (T != NULL)
 	{
-		if (T->Lchild != NULL || T->Rchild != NULL)
+		if (T->Lchild != NULL || T->Rchild != NULL)//统计非叶子结点个数
 			sumNoLeafNum++;
+		//if ((T->Lchild == NULL && T->Rchild != NULL) || (T->Lchild != NULL && T->Rchild == NULL))//统计度为1的结点
+		//	sumNoLeafNum++;
+		//if (T->Lchild != NULL && T->Rchild != NULL)//统计度数为2的结点
+		//	sumNoLeafNum++;
+		//if (T->Lchild == NULL && T->Rchild == NULL)//统计叶子结点个数
+		//	sumNoLeafNum++;
 		sumNoLeaf(T->Lchild);
 		sumNoLeaf(T->Rchild);
 	}
 	//printf("该树的非叶子结点有%d个", sumNoLeafNum);
+}
+
+int  sumHeight(BiTree T)
+{
+	if (T == NULL)
+		return 0;
+	int LeftNum = sumHeight(T->Lchild);
+	int RightNum = sumHeight(T->Rchild);
+	return LeftNum >RightNum ? LeftNum + 1:RightNum + 1;
 }
