@@ -12,7 +12,8 @@ int main()
 	//ReverseList(L);//逆置顺序表测试
 	//deleteTheSameElem(L, 60);//测试删除顺序表中相同的元素
 	//deleteAllBetweenSandT(L, 0, 10);//测试删除顺序表中中所有在s和t之间的数值
-	deleteAllSameNumber(L);
+	//deleteAllSameNumber(L);//测试删除表中所有重复的元素
+	deleteAllNoSeqBetweenSandT(L,0,10);
 	printf("=================================\n");
 	PrintList(L);
 	return 0;
@@ -104,9 +105,9 @@ void DestoryList(SeqList & L)
 void testInsert(SeqList & L)
 {
 	InitList(L);
-	ListInsert(L, 1, 1);ListInsert(L, 2, 2);ListInsert(L, 3, 2);
-	ListInsert(L, 4, 2);ListInsert(L, 5, 5);ListInsert(L, 6, 6);
-	ListInsert(L, 7, 7);ListInsert(L, 8, 8);ListInsert(L, 9, 9);
+	ListInsert(L, 1, 100);ListInsert(L, 2, 2);ListInsert(L, 3, 200);
+	ListInsert(L, 4, 1);ListInsert(L, 5, 300);ListInsert(L, 6, 4);
+	ListInsert(L, 7, 3);ListInsert(L, 8, 400);ListInsert(L, 9, 9);
 	ListInsert(L, 10, 10);ListInsert(L, 11, 11);
 }
 
@@ -174,7 +175,7 @@ void deleteTheSameElem(SeqList & L, ElemType e)
 	L.length = K;
 }
 
-void deleteAllBetweenSandT(SeqList & L, ElemType s, ElemType t)
+void deleteSeqListAllBetweenSandT(SeqList & L, ElemType s, ElemType t)
 {
 	/*算法思想：设置两个指针(伪)，一个指向在s和t之间的，即应当删除的，一个指向第一个大于t的数值位置
 	                    另外一个指向第一个大于t的，然后把这个数值移到这个里面，循环到末尾
@@ -194,6 +195,36 @@ void deleteAllBetweenSandT(SeqList & L, ElemType s, ElemType t)
 	for (int i = 0; i <= L.length - front; i++)//依次把区间外的向前面移动位置，移动完成之后将长度修改
 		L.data[rear + i] = L.data[front + i];
 	L.length = L.length - (front - rear);
+}
+
+void deleteAllNoSeqBetweenSandT(SeqList & L, ElemType s, ElemType t)
+{
+	/*算法思想：设置一个数组，其中存储着每个元素应当向前移动的步数，之后遍历，最后移动*/
+	//定义一个大小为顺序表长度+1的数组,用来存储对应的元素应当向前移动的步数
+	int Step[MaxSize+1];
+	//将数组初始化为0；
+	for (int i = 0; i < MaxSize + 1; i++)
+		Step[i] =0;
+	//定义一个整形变量暂存向前移动的步数
+	int step = 0;
+	//遍历，若是在s~t区间就将步数+1，并且将步数添加到步数数组中
+	for (int i = 1; i <= L.length; i++)
+	{
+		if (L.data[i] >= s &&L.data[i] <= t)
+		{
+			step++;
+			Step[i] = step;
+		}
+		else {
+			Step[i] = step;
+		}
+	}
+	//遍历，移动数据
+	for (int i = 1; i <= L.length; i++)
+		if (L.data[i] < s || L.data[i] >t)
+			L.data[i -Step[i]]= L.data[i] ;
+	//将顺序表的长度减去步数
+	L.length -= step;
 }
 
 void deleteAllSameNumber(SeqList & L)
