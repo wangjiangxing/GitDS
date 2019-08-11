@@ -6,11 +6,14 @@
 int main()
 {
 	SeqList L;
-	testInsert(L);
-	PrintList(L);
+	testInsert(L);//插入元素
+	PrintList(L);//输出
 	//deleteMinElem(L);//删除最小值测试
 	//ReverseList(L);//逆置顺序表测试
-	deleteTheSameElem(L, 60);
+	//deleteTheSameElem(L, 60);//测试删除顺序表中相同的元素
+	//deleteAllBetweenSandT(L, 0, 10);//测试删除顺序表中中所有在s和t之间的数值
+	deleteAllSameNumber(L);
+	printf("=================================\n");
 	PrintList(L);
 	return 0;
 }
@@ -37,6 +40,7 @@ int GetLength(SeqList L)
 
 int LocateElem(SeqList L, ElemType e)
 {
+	//默认不含重复元素
 	int len = L.length;
 	while (len) {
 		if (L.data[len] == e)
@@ -100,17 +104,10 @@ void DestoryList(SeqList & L)
 void testInsert(SeqList & L)
 {
 	InitList(L);
-	ListInsert(L, 1, 60);
-	ListInsert(L, 2, 20);
-	ListInsert(L, 3, 60);
-	ListInsert(L, 4, 40);
-	ListInsert(L, 5, 50);
-	ListInsert(L, 6, 60);
-	ListInsert(L, 7, 60);
-	ListInsert(L, 8, 60);
-	ListInsert(L, 9, 60);
-	ListInsert(L, 10, 60);
-	ListInsert(L, 11, 60);
+	ListInsert(L, 1, 1);ListInsert(L, 2, 2);ListInsert(L, 3, 2);
+	ListInsert(L, 4, 2);ListInsert(L, 5, 5);ListInsert(L, 6, 6);
+	ListInsert(L, 7, 7);ListInsert(L, 8, 8);ListInsert(L, 9, 9);
+	ListInsert(L, 10, 10);ListInsert(L, 11, 11);
 }
 
 void testDelete(SeqList & L)
@@ -175,4 +172,56 @@ void deleteTheSameElem(SeqList & L, ElemType e)
 		}	
 	}
 	L.length = K;
+}
+
+void deleteAllBetweenSandT(SeqList & L, ElemType s, ElemType t)
+{
+	/*算法思想：设置两个指针(伪)，一个指向在s和t之间的，即应当删除的，一个指向第一个大于t的数值位置
+	                    另外一个指向第一个大于t的，然后把这个数值移到这个里面，循环到末尾
+					    将长度设置为i的长度*/
+	if (s > t)
+		return;
+	//首先找到第一个在区间s和t之间的，然后再找一个第一个大于t的
+	int front = 1, rear = 1;
+	while (L.data[rear] < s)
+		rear++;
+	while (L.data[front] <= t)
+		front++;
+	//出现极端情况：全部在区间里面，全部不在区间里面
+	if (rear == L.length|| front == 1)//rear代表找到第一个在被删除区间的值，若为Length说明没有一个是在这个区间的
+	//front代表第一个比被删区间大的值，若是1说明没有一个在这个区间则直接返回
+		return;
+	for (int i = 0; i <= L.length - front; i++)//依次把区间外的向前面移动位置，移动完成之后将长度修改
+		L.data[rear + i] = L.data[front + i];
+	L.length = L.length - (front - rear);
+}
+
+void deleteAllSameNumber(SeqList & L)
+{
+	/*算法思想：首先设置两个"指针"，分别指向开始，首先先让后面的指针一直走
+	如果不相同就都向前一个，如果相同就让后面一个一直走同时记录向前移动的步数
+	之后当碰到第一个不相同的数值后开始移动，重复这个过程*/
+	//首先设置两个指针，初始时指向顺序表的第一个
+	int front = 2;
+	int rear = 1;
+	//设置一个变量来保存向前移动的步数
+	int step= 0;
+	//for循环来遍历整个顺序表，如果两个指针指向的数值相同后面的指针继续向前移动
+	for (int i = 1; i <= L.length; i++)
+	{
+		if (L.data[front] == L.data[rear])
+		{
+			front++;
+			step++;
+		}
+		//如果不同就两个都移动，并且移动数值。
+		if (L.data[front] != L.data[rear])
+		{
+			L.data[front - step] = L.data[front];
+			front++;
+			rear++;
+		}	
+	}
+	//将顺序表的长度减去移动的数值
+	L.length -= step;
 }

@@ -21,3 +21,5 @@ void testDelete(SeqList &L);//测试删除数据
 ElemType deleteMinElem(SeqList &L);//删除顺序表中最小的元素，并用最后一个元素填入，返回最小值
 void ReverseList(SeqList &L);//原地将顺序表逆置
 void deleteTheSameElem(SeqList &L, ElemType e);//删除该顺序表中所有值为e的数据，要求时间复杂度为O(n),空间复杂度为O(1)  
+void deleteAllBetweenSandT(SeqList &L, ElemType s, ElemType t);//有序顺序表中删除所有值在s~t之间的数值
+void deleteAllSameNumber(SeqList &L);//删除顺序表中重复的元素
