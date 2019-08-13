@@ -5,17 +5,21 @@
 #include "SeqList.h"
 int main()
 {
-	SeqList L;
+	SeqList L,S;
 	testInsert(L);//插入元素
-	PrintList(L);//输出
+	testInsert2(S);
+	PrintList(L);
+	PrintList(S);
+	//PrintList(L);//输出
 	//deleteMinElem(L);//删除最小值测试
 	//ReverseList(L);//逆置顺序表测试
 	//deleteTheSameElem(L, 60);//测试删除顺序表中相同的元素
 	//deleteAllBetweenSandT(L, 0, 10);//测试删除顺序表中中所有在s和t之间的数值
 	//deleteAllSameNumber(L);//测试删除表中所有重复的元素
-	deleteAllNoSeqBetweenSandT(L,0,10);
+	//deleteAllNoSeqBetweenSandT(L,0,10);
+	SeqList returnSeqList = combineTwoSeqList(L, S);
 	printf("=================================\n");
-	PrintList(L);
+	PrintList(returnSeqList);
 	return 0;
 }
 
@@ -105,10 +109,19 @@ void DestoryList(SeqList & L)
 void testInsert(SeqList & L)
 {
 	InitList(L);
-	ListInsert(L, 1, 100);ListInsert(L, 2, 2);ListInsert(L, 3, 200);
-	ListInsert(L, 4, 1);ListInsert(L, 5, 300);ListInsert(L, 6, 4);
-	ListInsert(L, 7, 3);ListInsert(L, 8, 400);ListInsert(L, 9, 9);
-	ListInsert(L, 10, 10);ListInsert(L, 11, 11);
+	ListInsert(L, 1, 1);ListInsert(L, 2, 3);ListInsert(L, 3, 5);
+	ListInsert(L, 4, 7);ListInsert(L, 5, 9);ListInsert(L, 6, 11);
+	ListInsert(L, 7, 13);ListInsert(L, 8,15 );ListInsert(L, 9, 17);
+	ListInsert(L, 10, 19);ListInsert(L, 11, 21);
+}
+
+void testInsert2(SeqList & L)
+{
+	InitList(L);
+	ListInsert(L, 1, 2); ListInsert(L, 2, 4); ListInsert(L, 3, 6);
+	ListInsert(L, 4, 8); ListInsert(L, 5, 10); ListInsert(L, 6, 12);
+	ListInsert(L, 7, 14); ListInsert(L, 8, 16); ListInsert(L, 9, 18);
+	ListInsert(L, 10, 22); ListInsert(L, 11, 23);
 }
 
 void testDelete(SeqList & L)
@@ -255,4 +268,53 @@ void deleteAllSameNumber(SeqList & L)
 	}
 	//将顺序表的长度减去移动的数值
 	L.length -= step;
+}
+
+SeqList combineTwoSeqList(SeqList L, SeqList S)
+{
+	/*算法思想：分别遍历两个有序表，并分别判断，并分别判断是否已经结束一个链表的遍历
+	以减少判断的次数，，本算法要求L和S的长度之和不大于MaxSize*/
+	//定义一个能够容纳两个数组的要求返回数组returnSeqList;
+	SeqList returnSeqList;
+	returnSeqList.data = (ElemType *)malloc(MaxSize * sizeof(ElemType));
+	//定义两个“指针”用来比较当前应当存入数组的值
+	int ptr1 = 1; int len1= L.length;
+	int ptr2 = 1; int len2 = S.length;
+	int returnPtr = 1;
+	//循环遍历两个顺序表
+	while(ptr1<=len1&&ptr2<len2 )	//判断其中某一个顺序表是否已经判断结束,若是结束，直接停止比较直接让后面的依次加入返回顺序表中
+	{
+		if (L.data[ptr1] >= S.data[ptr2])
+		{
+			returnSeqList.data[returnPtr] = S.data[ptr2];
+			returnPtr++;
+			ptr2++;
+		}
+		else if (L.data[ptr1] < S.data[ptr2])
+		{
+			returnSeqList.data[returnPtr] = L.data[ptr1];
+			returnPtr++;
+			ptr1++;
+		}
+	}
+	//进行相应的后续添加
+	if (ptr1 > len1)
+	{
+		for (ptr2; ptr2<= len2; ptr2++)
+		{
+			returnSeqList.data[returnPtr] = S.data[ptr2];
+			returnPtr++;
+		}
+	}
+	if (ptr2 > len2)
+	{
+		for (ptr1; ptr1<= len1; ptr1++)
+		{
+			returnSeqList.data[returnPtr] = L.data[ptr1];
+			returnPtr++;
+		}
+	}
+	//将该顺序表中的length设置为两者之和
+	returnSeqList.length = len1 + len2;
+	return returnSeqList;
 }
