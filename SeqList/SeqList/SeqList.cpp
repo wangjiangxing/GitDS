@@ -5,11 +5,15 @@
 #include "SeqList.h"
 int main()
 {
-	SeqList L,S;
+	SeqList L;
 	testInsert(L);//插入元素
-	testInsert2(S);
 	PrintList(L);
-	PrintList(S);
+	//swapSeqList(5, 6, L);//测试交换A[m+n]数组从A[m1,m2.....mm,n1,n2....nn]->A[n1,n2....nn,m1,m2...mm]
+	findSomeoneToSwapLaterOrInset(L, 14);
+	PrintList(L);
+	//testInsert2(S);
+	//PrintList(L);
+	//PrintList(S);
 	//PrintList(L);//输出
 	//deleteMinElem(L);//删除最小值测试
 	//ReverseList(L);//逆置顺序表测试
@@ -17,9 +21,9 @@ int main()
 	//deleteAllBetweenSandT(L, 0, 10);//测试删除顺序表中中所有在s和t之间的数值
 	//deleteAllSameNumber(L);//测试删除表中所有重复的元素
 	//deleteAllNoSeqBetweenSandT(L,0,10);
-	SeqList returnSeqList = combineTwoSeqList(L, S);
-	printf("=================================\n");
-	PrintList(returnSeqList);
+	//SeqList returnSeqList = combineTwoSeqList(L, S);
+	//printf("=================================\n");
+	//PrintList(returnSeqList);
 	return 0;
 }
 
@@ -280,6 +284,8 @@ SeqList combineTwoSeqList(SeqList L, SeqList S)
 	//定义两个“指针”用来比较当前应当存入数组的值
 	int ptr1 = 1; int len1= L.length;
 	int ptr2 = 1; int len2 = S.length;
+	if (len1 + len2 > MaxSize)
+		return returnSeqList;
 	int returnPtr = 1;
 	//循环遍历两个顺序表
 	while(ptr1<=len1&&ptr2<len2 )	//判断其中某一个顺序表是否已经判断结束,若是结束，直接停止比较直接让后面的依次加入返回顺序表中
@@ -317,4 +323,65 @@ SeqList combineTwoSeqList(SeqList L, SeqList S)
 	//将该顺序表中的length设置为两者之和
 	returnSeqList.length = len1 + len2;
 	return returnSeqList;
+}
+
+void swapSeqList(int m, int n,SeqList &L)
+{
+	/*算法思想：借鉴逻辑移位的思想，定义一个暂存之后一直进行移位操作，循环N次后即可交换*/
+	//判断输入的数据是否合法
+	if (n + m != L.length)
+	{
+		printf("输入有错，运行结束!");
+		return;
+	}	
+	//首先定义一个暂存，定义一个数字用来记录次数
+	//由于本结构默认采用data[0]未用，可以当作暂存
+	int num = 1;
+	while (num <= n)
+	{
+		L.data[0] = L.data[L.length];
+		//开始向后移位
+	   //将第i次移位的暂存存入L.data[i-1]中
+		for (int i = 0; i < L.length; i++)
+			L.data[L.length - i] = L.data[L.length - i - 1];
+		num++;
+	}
+}
+
+void findSomeoneToSwapLaterOrInset(SeqList& L, ElemType e)
+{
+	/*算法思想:在找元素上可以利用二分查找，效率快，时间复杂度是logn，
+		若是查找的到，自然可以直接交换；
+		若是找不到，则必须移动大于该数据的后续元素
+	*/
+	//首先利用二分查找
+	int front =L.length,rear=1;
+	while (rear < front)
+	{
+		int middle = (front + rear) / 2;
+		if (L.data[middle] > e)
+			front = middle - 1;
+		if (L.data[middle] < e)
+			rear = middle + 1;
+		if (L.data[middle] == e)
+			rear = front = middle;
+	}
+	//若是找到，交换它与后继元素
+	if (L.data[rear] == e)
+	{
+		ElemType tmp = L.data[rear];
+		L.data[rear] = L.data[rear+1];
+		L.data[rear + 1]=tmp;
+	}
+	//找不到，将后面的元素均向后推移之后将数值插入
+	if (L.data[rear] != e)
+	{
+		//将后续数值均向后移位一位
+		for (int i = L.length; i >= rear; i--)
+			L.data[i + 1] = L.data[i];
+		L.data[rear] = e;
+		//将数值插入rear
+		//将length加上1
+		L.length++;
+	}
 }
