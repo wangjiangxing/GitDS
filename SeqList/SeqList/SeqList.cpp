@@ -5,12 +5,14 @@
 #include "SeqList.h"
 int main()
 {
-	SeqList L;
-	testInsert(L);//插入元素
-	PrintList(L);
+	SeqList A,B;
+	testInsert(A);//插入元素
+	testInsert2(B);
+	findTwoListTheMiddleNum(A, B);
+	//PrintList(L);
 	//swapSeqList(5, 6, L);//测试交换A[m+n]数组从A[m1,m2.....mm,n1,n2....nn]->A[n1,n2....nn,m1,m2...mm]
-	findSomeoneToSwapLaterOrInset(L, 14);
-	PrintList(L);
+	//findSomeoneToSwapLaterOrInset(L, 14);//测试最快速度找到某一个值，若不存在就插入这个值
+	//PrintList(L);
 	//testInsert2(S);
 	//PrintList(L);
 	//PrintList(S);
@@ -384,4 +386,70 @@ void findSomeoneToSwapLaterOrInset(SeqList& L, ElemType e)
 		//将length加上1
 		L.length++;
 	}
+}
+
+ElemType findTwoListTheMiddleNum(SeqList A, SeqList B)
+{
+	/*原算法思想：先将两个数组元素通过比较合并为一个数组，然后使用二分查找，若使用这种方法，时间复杂度为O(n)
+		空间复杂度为:O(n),效果不理想
+	现算法思想:不对两个数组进行合并排序。首先找出两个数组中各自的中位数然后进行数据上的比较，假设a,b
+		若a=b，说明中位数已经找到，
+		若是a>b，说明中位数一定在a的左边或者b的右边，就把a的右边和b的左边"删去"
+		若是a<b，说明中位数一定在a的右边或者b的左边，就把a的左边和b的右边"删去"
+		可以看出来时间复杂度为O(log2n),由于占用常数个变量，空间复杂度为O(1)
+	*/
+	//首先判断输入的两个数组的合法性
+	
+	if (A.length != B.length)
+	{
+		printf("输入的两个数组元素有误!");
+		return -1;
+	}
+	//定义四个变量分别记录左端和右端，为二分法做准备
+	int Arear = A.length; int Afront = 1; int Amiddle = (Arear + Afront) / 2;
+	int Brear = B.length; int Bfront = 1; int Bmiddle = (Brear + Bfront) / 2;
+	//使用二分法
+	while (Arear!=Afront|| Brear != Bfront)
+	{
+		Amiddle = (Arear + Afront) / 2;
+		Bmiddle = (Brear + Bfront) / 2;
+		if (A.data[Amiddle] ==B.data[Bmiddle])
+		{
+			return A.data[Amiddle];
+		}
+		if (A.data[Amiddle] > B.data[Bmiddle])
+		{
+			if ((Brear + Bfront) % 2 == 0)
+			{
+				Arear = Amiddle ;
+				Bfront = Bmiddle ;
+			}
+			else {
+				Arear = Amiddle ;
+				Bfront = Bmiddle + 1;
+			}
+			
+		}
+		if (A.data[Amiddle] < B.data[Bmiddle])
+		{
+			if ((Arear + Afront) % 2 == 0)
+			{
+				Afront = Amiddle ;
+				Brear = Bmiddle ;
+			}
+			else {
+				Afront = Amiddle + 1;
+				Brear = Bmiddle ;
+			}
+		}
+	}
+	//最后结果若是两个中位数相等，则结果就是这个数值，若不等就是两者之中更大的数
+	ElemType returnNum= A.data[Amiddle] > B.data[Bmiddle] ? A.data[Amiddle] : B.data[Bmiddle];
+	//if (A.data[Amiddle] == B.data[Bmiddle])
+	//	return A.data[Amiddle];
+	//else
+	//	A.data[Amiddle] > B.data[Bmiddle] ? A.data[Amiddle] : B.data[Bmiddle];
+	printf("中位数为%d\n", returnNum);
+	return 0;
+		
 }
