@@ -8,7 +8,8 @@ int main()
 	SeqList A,B;
 	testInsert(A);//插入元素
 	testInsert2(B);
-	findTwoListTheMiddleNum(A, B);
+	findTheMainNumber(A);
+	//findTwoListTheMiddleNum(A, B);//测试找出两个顺序表中的中位数
 	//PrintList(L);
 	//swapSeqList(5, 6, L);//测试交换A[m+n]数组从A[m1,m2.....mm,n1,n2....nn]->A[n1,n2....nn,m1,m2...mm]
 	//findSomeoneToSwapLaterOrInset(L, 14);//测试最快速度找到某一个值，若不存在就插入这个值
@@ -115,9 +116,9 @@ void DestoryList(SeqList & L)
 void testInsert(SeqList & L)
 {
 	InitList(L);
-	ListInsert(L, 1, 1);ListInsert(L, 2, 3);ListInsert(L, 3, 5);
-	ListInsert(L, 4, 7);ListInsert(L, 5, 9);ListInsert(L, 6, 11);
-	ListInsert(L, 7, 13);ListInsert(L, 8,15 );ListInsert(L, 9, 17);
+	ListInsert(L, 1, 1);ListInsert(L, 2, 1);ListInsert(L, 3, 1);
+	ListInsert(L, 4, 1);ListInsert(L, 5, 1);ListInsert(L, 6, 1);
+	ListInsert(L, 7, 1);ListInsert(L, 8,1 );ListInsert(L, 9, 17);
 	ListInsert(L, 10, 19);ListInsert(L, 11, 21);
 }
 
@@ -408,7 +409,7 @@ ElemType findTwoListTheMiddleNum(SeqList A, SeqList B)
 	//定义四个变量分别记录左端和右端，为二分法做准备
 	int Arear = A.length; int Afront = 1; int Amiddle = (Arear + Afront) / 2;
 	int Brear = B.length; int Bfront = 1; int Bmiddle = (Brear + Bfront) / 2;
-	//使用二分法
+	//使用二分法查找
 	while (Arear!=Afront|| Brear != Bfront)
 	{
 		Amiddle = (Arear + Afront) / 2;
@@ -452,4 +453,31 @@ ElemType findTwoListTheMiddleNum(SeqList A, SeqList B)
 	printf("中位数为%d\n", returnNum);
 	return 0;
 		
+}
+
+ElemType findTheMainNumber(SeqList L)
+{
+	/*原算法思想：由于该数组的元素的值不会大于所在元素下标，可以设置一个数组用来专门存储所在元素出现的个数
+	时间复杂度为O(n),空间复杂度为O(n)*/
+	//定义一个频率数组，下标表示元素值，里面的数值代表下标值出现的次数,初始化频率数组
+	int A[MaxSize];
+	for (int i = 0; i <= L.length; i++)
+	{
+		A[i] = 0;
+	}
+	//遍历要求的数组
+	for (int i = 1; i <= L.length; i++)
+	{
+		A[L.data[i]]++;
+	}
+	//查找是否存在一个值>n/2
+	int maxIndex = 0;
+	for (int i = 0; i < L.length; i++)
+		if (A[i] > L.length / 2)
+		{
+			printf("该顺序表的主元素为:%d", i);
+			return 0;
+		}
+	printf("该顺序表不存在主元素!");
+	return -1;
 }

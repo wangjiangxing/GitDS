@@ -30,4 +30,5 @@ SeqList combineTwoSeqList(SeqList L, SeqList S);//7.合并两个顺序表并返回合成的顺
 void swapSeqList( int m, int n,SeqList &L );//8:交换A[m+n]数组从A[m1,m2.....mm,n1,n2....nn]->A[n1,n2....nn,m1,m2...mm]
 //第十题也是顺序左移，故不再编写
 void findSomeoneToSwapLaterOrInset(SeqList& L, ElemType e);//9:查找顺序表中某个特定元素的值，若存在与后继元素交换，若不存在则插入表中并且是表中元素有序
-ElemType findTwoListTheMiddleNum(SeqList A,SeqList B);
+ElemType findTwoListTheMiddleNum(SeqList A,SeqList B);//11，找出两个等长数组的中位数
+ElemType findTheMainNumber(SeqList L);//找出主元素，主元素的定义是在长度为N的链表中出现元素最多的且大于N/2的元素

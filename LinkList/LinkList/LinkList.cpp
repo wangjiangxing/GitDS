@@ -15,7 +15,7 @@ int main()
 	//deleteAllElemNoHead(L, 10);
 	//deleteAllElemHaveHead(L, 10);//测试删除含有头结点的所有元素为某一个数值的结点
 	printLinkList(L);//输出单链表
-	reversePrintAllElem(L);
+	//reversePrintAllElem(L);//测试倒序输出单链表
 	printf("链表长度为:%d", getLength(L));
 	return 0;
 }
@@ -23,7 +23,9 @@ int main()
 void initLinkList(LinkList & L)
 {
 	L = (LinkList)malloc(sizeof(Lnode));
+	//printf("%d", L->next);
 	L->next = NULL;
+	printf("%d", L->next);
 	L->data = 0;
 }
 
